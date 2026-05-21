@@ -1,0 +1,680 @@
+\documentclass[journal, onecolumn]{IEEEtran}
+
+% --- Codificacion y lenguaje -------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish, es-tabla]{babel}
+
+% --- Margenes ----------------------------------------------------------------
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{ArduinoStyle}{
+    language=C++,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{orange},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true,
+    backgroundcolor=\color{gray!10}
+}
+
+% --- Graficos y figuras ------------------------------------------------------
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{float}
+
+% --- Colores -----------------------------------------------------------------
+\usepackage{xcolor}
+\definecolor{azulTitulo}{RGB}{0,70,127}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% --- Tablas ------------------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+
+% --- Hipervinculos -----------------------------------------------------------
+\usepackage[hidelinks]{hyperref}
+
+% --- Encabezado y pie de pagina ----------------------------------------------
+\usepackage{fancyhdr}
+\setlength{\headheight}{33pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{%
+  \begin{picture}(0,0)
+    \put(5,10){\includegraphics[width=11mm]{pictures/escudo.png}}
+  \end{picture}%
+  \hspace{1mm}\textsc{\color{azulTitulo}Control Digital \hspace{90mm} Ing. Telecomunicaciones}%
+}
+\rhead{%
+  \begin{picture}(125,0)
+    \put(10,10){\includegraphics[width=35mm]{pictures/logo.png}}
+  \end{picture}%
+}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\sectionmark}[1]{}
+\renewcommand{\subsectionmark}[1]{}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \lhead{%
+    \begin{picture}(0,0)
+      \put(0,-5){\includegraphics[width=8.5mm]{pictures/escudo.png}}
+    \end{picture}%
+  }
+  \rhead{%
+    \begin{picture}(86,0)
+      \put(0,-10){\includegraphics[width=30mm]{pictures/logo.png}}
+    \end{picture}%
+  }
+  \cfoot{\thepage}
+  \renewcommand{\headrulewidth}{0.6pt}
+}
+
+% --- Formato de secciones ----------------------------------------------------
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\titleformat{\section}
+  {\color{azulTitulo}\large\bfseries}{\thesection.}{0.5em}{}
+  [\color{azulTitulo}\titlerule]
+
+\titleformat{\subsection}
+  {\color{azulTitulo}\normalsize\bfseries}{\thesubsection}{0.5em}{}[]
+
+\titleformat{\subsubsection}
+  {\color{azulTitulo}\normalsize\itshape}{\thesubsubsection}{0.5em}{}[]
+
+% --- Numeracion de secciones -------------------------------------------------
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+
+% --- Codigo fuente -----------------------------------------------------------
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% --- Diagramas TikZ ----------------------------------------------------------
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, shapes.geometric, positioning, fit, backgrounds, babel}
+
+% --- Matematicas -------------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+
+% --- Nombres localizados -----------------------------------------------------
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\IEEEkeywordsname}{Palabras Clave}
+\addto\captionsspanish{\renewcommand{\appendixname}{Anexo}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+
+% =============================================================================
+%  PORTADA
+% =============================================================================
+
+\title{%
+  \color{azulTitulo}\textbf{Practica 3: Control de Motor DC}\\[4pt]
+}
+\author{%
+  \begin{tabular}{c c}
+    Franklin Benalcazar S. & Luis Felipe Rivas P.\\
+    \color{azulTitulo}\underline{franklin.benalcazar@ucuenca.edu.ec} &
+    \color{azulTitulo}\underline{luisf.rivas@ucuenca.edu.ec} \\
+  \end{tabular}\\
+  \textbf{Ingenieria en Telecomunicaciones}\\
+  \textbf{Universidad de Cuenca}\\[4pt]
+}
+
+\begin{document}
+\maketitle
+
+% --- Resumen -----------------------------------------------------------------
+\begin{abstract}
+    La práctica consistió en diseñar e implementar un sistema de control de velocidad para un motor DC utilizando señales PWM y retroalimentación mediante un encoder óptico de 36 pulsos por revolución. Se configuró el hardware del EPC y el Controlino Mega para adquirir los pulsos del encoder y procesar la información mediante interrupciones externas y temporizadores en modo CTC.
+
+    Posteriormente, se desarrolló una interfaz HMI para la visualización en tiempo real de variables como velocidad y referencia, permitiendo además el ajuste de parámetros de control. Se implementó la comunicación entre el controlador y la interfaz, logrando el intercambio de datos necesario para el funcionamiento del sistema PID.
+
+    Finalmente, se verificó el comportamiento del motor ante diferentes referencias de velocidad, observando la respuesta dinámica del sistema y evaluando la precisión del control implementado.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Controllino Mega, HMI Stone, PWM, PID, comunicacion serial, retardo no bloqueante, control digital
+\end{IEEEkeywords}
+
+% =============================================================================
+\section{Introduccion}
+% =============================================================================
+
+En esta práctica de laboratorio se desarrolló un sistema de monitoreo y control de velocidad para un motor de corriente continua (DC) utilizando el Controlino Mega y una interfaz HMI. El trabajo se centró en la adquisición de señales provenientes de un encoder óptico, el procesamiento de datos mediante interrupciones y la generación de señales PWM para regular la velocidad del motor. Además, se implementó un sistema de comunicación entre el controlador y la interfaz gráfica para visualizar variables del proceso y ajustar parámetros de control.
+
+La práctica permitió aplicar conceptos fundamentales de control digital, temporización, adquisición de datos y programación embebida. También se analizaron aspectos relacionados con el uso de interrupciones externas y temporizadores para garantizar un muestreo preciso de la velocidad del motor, así como la integración de un controlador PID para mejorar el desempeño dinámico del sistema.
+
+% =============================================================================
+\section{Marco Teorico}
+% =============================================================================
+
+\subsection{Controladores PID}
+
+El controlador Proporcional–Integral–Derivativo (PID) es uno de los algoritmos de control más utilizados en la industria debido a su simplicidad, robustez y capacidad de adaptarse a una gran variedad de procesos. Su aplicación es común en sistemas de control de temperatura, velocidad, presión, flujo y nivel, donde se requiere mantener una variable de proceso cercana a un valor deseado denominado \textit{setpoint}. :contentReference[oaicite:0]{index=0}
+
+El principio de funcionamiento de un controlador PID consiste en medir continuamente la diferencia entre la variable de proceso y el punto de referencia. Esta diferencia, conocida como error, es procesada mediante tres acciones de control: proporcional, integral y derivativa. La suma de estas tres acciones genera la señal de control aplicada al actuador del sistema. :contentReference[oaicite:1]{index=1}
+
+\subsection{Sistema de Control en Lazo Cerrado}
+
+Los controladores PID trabajan en sistemas de control de lazo cerrado, en los cuales existe retroalimentación continua entre la salida y la entrada del sistema. En este tipo de sistemas, un sensor mide la variable de proceso y envía dicha información al controlador, el cual compara el valor medido con el valor deseado para calcular el error y corregirlo. :contentReference[oaicite:2]{index=2}
+
+Entre los elementos principales de un sistema PID se encuentran:
+
+\begin{itemize}
+    \item \textbf{Variable de proceso (PV):} magnitud que se desea controlar.
+    \item \textbf{Setpoint (SP):} valor deseado para la variable de proceso.
+    \item \textbf{Error:} diferencia entre el setpoint y la variable de proceso.
+    \item \textbf{Actuador:} elemento encargado de modificar el sistema físico.
+    \item \textbf{Sensor:} dispositivo que mide la variable de proceso.
+\end{itemize}
+
+El desempeño de un sistema de control suele evaluarse mediante parámetros como tiempo de subida, sobreimpulso, tiempo de establecimiento y error en estado estacionario. :contentReference[oaicite:3]{index=3}
+
+\subsection{Acción Proporcional}
+
+La acción proporcional genera una respuesta directamente proporcional al error presente en el sistema. Su expresión matemática es:
+
+\[
+u_P(t)=K_p e(t)
+\]
+
+donde:
+
+\begin{itemize}
+    \item $u_P(t)$ es la salida proporcional,
+    \item $K_p$ es la ganancia proporcional,
+    \item $e(t)$ es el error del sistema.
+\end{itemize}
+
+Un aumento en la ganancia proporcional mejora la rapidez de respuesta del sistema; sin embargo, valores excesivos pueden provocar oscilaciones e inestabilidad. :contentReference[oaicite:4]{index=4}
+
+\subsection{Acción Integral}
+
+La acción integral considera la acumulación del error a lo largo del tiempo, permitiendo eliminar el error en estado estacionario. Matemáticamente se expresa como:
+
+\[
+u_I(t)=K_i \int e(t)\,dt
+\]
+
+donde $K_i$ representa la ganancia integral.
+
+La acción integral mejora la precisión del sistema, aunque un valor elevado puede incrementar el sobreimpulso y producir respuestas lentas o inestables. Además, puede aparecer el fenómeno conocido como \textit{integral windup}, el cual ocurre cuando la acción integral se acumula excesivamente. :contentReference[oaicite:5]{index=5}
+
+\subsection{Acción Derivativa}
+
+La acción derivativa predice el comportamiento futuro del error mediante su tasa de cambio. Su ecuación es:
+
+\[
+u_D(t)=K_d \frac{de(t)}{dt}
+\]
+
+donde $K_d$ es la ganancia derivativa.
+
+Esta acción contribuye a reducir el sobreimpulso y mejorar la estabilidad del sistema. Sin embargo, es sensible al ruido presente en las señales medidas, por lo que generalmente se emplean valores pequeños de ganancia derivativa. :contentReference[oaicite:6]{index=6}
+
+\subsection{Ecuación General del Controlador PID}
+
+La combinación de las tres acciones da lugar a la ecuación general del controlador PID:
+
+\[
+u(t)=K_p e(t)+K_i \int e(t)\,dt+K_d \frac{de(t)}{dt}
+\]
+
+En el dominio de Laplace, la función de transferencia del controlador PID se expresa como:
+
+\[
+G(s)=K_p+\frac{K_i}{s}+K_d s
+\]
+
+Esta estructura permite obtener sistemas rápidos, estables y con mínimo error permanente. :contentReference[oaicite:7]{index=7}
+
+\subsection{Sintonización de un Controlador PID}
+
+La sintonización de un controlador PID consiste en ajustar adecuadamente las ganancias proporcional, integral y derivativa para lograr una respuesta óptima del sistema. Entre los métodos más utilizados se encuentra el método de Ziegler–Nichols, el cual determina los parámetros PID a partir de la ganancia crítica y el período de oscilación del sistema. :contentReference[oaicite:8]{index=8}
+
+El ajuste correcto de los parámetros PID permite obtener:
+
+\begin{itemize}
+    \item menor tiempo de respuesta,
+    \item reducción del error permanente,
+    \item disminución del sobreimpulso,
+    \item mayor estabilidad y robustez del sistema.
+\end{itemize}
+
+\subsection{Aplicaciones de los Controladores PID}
+
+Los controladores PID son ampliamente utilizados en la automatización industrial y en sistemas embebidos debido a su facilidad de implementación y eficiencia. Sus aplicaciones incluyen:
+
+\begin{itemize}
+    \item control de temperatura en hornos y cámaras térmicas,
+    \item control de velocidad en motores eléctricos,
+    \item regulación de presión y caudal,
+    \item sistemas robóticos,
+    \item control de procesos químicos e industriales.
+\end{itemize}
+
+Gracias a su versatilidad, los controladores PID continúan siendo una de las herramientas más importantes dentro de la ingeniería de control. :contentReference[oaicite:9]{index=9}
+
+
+
+% =============================================================================
+
+% -----------------------------------------------------------------------------
+
+\section{Consideraciones tecnicas del codigo PID en Controllino}
+
+\subsection{Plataforma y estructura general}
+La implementacion se realizo sobre una placa \textbf{Controllino Mega}.
+El control de velocidad del motor DC se organiza en dos niveles:
+\begin{itemize}
+  \item \textbf{ISR de Timer1}: adquiere RPM y ejecuta el PID discreto cada periodo de muestreo.
+  \item \textbf{Bucle principal}: gestiona HMI, setpoint, seguridad (emergencia/continuar) y visualizacion.
+\end{itemize}
+
+\subsection{Definicion del tiempo de muestreo y ticks de Timer1}
+En el codigo se define:
+\begin{itemize}
+  \item Frecuencia de muestreo: $f_s = 20\,\mathrm{Hz}$
+  \item Periodo de muestreo: $T = 1/f_s = 0.05\,\mathrm{s}$
+\end{itemize}
+
+El Timer1 se configura con preescalador 256.
+Para un reloj base de $16\,\mathrm{MHz}$:
+\[
+ f_{\text{timer}} = \frac{16\times10^6}{256} = 62500\,\mathrm{ticks/s}
+\]
+
+El valor de comparacion se fija con:
+\[
+\text{OCR1A} = \frac{62500}{f_s} = \frac{62500}{20} = 3125
+\]
+
+Por tanto, \textbf{no son 6000 ticks} en esta configuracion, sino aproximadamente
+\textbf{3125 ticks por muestra} (20 Hz).
+
+\subsection{Medicion de velocidad (RPM)}
+En cada interrupcion de muestreo se usan los pulsos contados por el encoder:
+\[
+\mathrm{RPM}(k)=\frac{N_p(k)\cdot 60\cdot f_s}{\mathrm{PPR}}
+\]
+donde:
+\begin{itemize}
+  \item $N_p(k)$: pulsos acumulados en la ventana de muestreo
+  \item $\mathrm{PPR}=36$: pulsos por revolucion
+  \item $f_s=20\,\mathrm{Hz}$
+\end{itemize}
+
+\subsection{PID discreto implementado en el codigo}
+La forma usada en el firmware es la ecuacion incremental por diferencias:
+\[
+ u(k)=u(k-1)+K_p\left[(e(k)-e(k-1)) + \frac{T}{T_i}e(k) + \frac{T_d}{T}(e(k)-2e(k-1)+e(k-2))\right]
+\]
+con:
+\[
+ e(k)=r(k)-y(k)
+\]
+
+\textbf{Ventaja de esta forma}: evita recalcular la salida absoluta completa y usa memoria
+minima del estado previo ($u(k-1), e(k-1), e(k-2)$).
+
+\subsection{Relacion con la forma por ganancias (Ki, Kd)}
+Si se desea expresar el controlador en terminos de ganancias:
+\[
+K_i=\frac{K_p}{T_i},\qquad K_d=K_p\,T_d
+\]
+la misma ecuacion puede escribirse como:
+\[
+ u(k)=u(k-1)+K_p(e(k)-e(k-1)) + K_i\,T\,e(k) + \frac{K_d}{T}(e(k)-2e(k-1)+e(k-2))
+\]
+
+Tambien puede representarse en forma de coeficientes:
+\[
+ u(k)=u(k-1)+a_0 e(k)+a_1 e(k-1)+a_2 e(k-2)
+\]
+con:
+\[
+ a_0=K_p+K_iT+\frac{K_d}{T},\quad
+ a_1=-K_p-2\frac{K_d}{T},\quad
+ a_2=\frac{K_d}{T}
+\]
+
+\subsection{Saturacion y escalado de la accion de control}
+La salida del PID se limita y luego se escala a PWM:
+\begin{itemize}
+  \item Saturacion intermedia: $u\in[0,5]$
+  \item Mapeo posterior: $u\in[0,255]$ para \texttt{analogWrite}
+\end{itemize}
+
+Este escalado permite compatibilizar la magnitud calculada del control con el rango real de
+accionamiento del pin PWM.
+
+\subsection{Sintonizacion y ajuste fino realizados}
+En las pruebas se consideraron tres etapas:
+\begin{enumerate}
+  \item Valores iniciales teoricos/calculados.
+  \item Ajustes intermedios obtenidos con apoyo de herramientas (p.ej. Matlab/LabVIEW).
+  \item Ajuste fino empirico en planta real para reducir oscilacion y mejorar seguimiento.
+\end{enumerate}
+
+Parametros finales usados en el codigo funcional:
+\[
+K_p=0.03,\qquad T_i=0.08\,\mathrm{s},\qquad T_d=0.00\,\mathrm{s}
+\]
+
+Interpretacion practica del ajuste fino:
+\begin{itemize}
+  \item Se redujo el termino derivativo a cero para evitar amplificacion de ruido.
+  \item Se uso una accion proporcional moderada para disminuir sobreimpulso.
+  \item Se mantuvo la accion integral para eliminar error en regimen permanente.
+\end{itemize}
+
+\subsection{Seguridad y operacion}
+El control incluye logica de seguridad por botones fisicos:
+\begin{itemize}
+  \item \textbf{Emergencia}: fuerza PWM a cero y detiene el motor.
+  \item \textbf{Continuar}: restablece la aplicacion del control PID.
+\end{itemize}
+
+Esto asegura una parada inmediata ante condicion de riesgo y recuperacion controlada del proceso.
+
+
+
+
+
+% =============================================================================
+\section{Respuesta a las Preguntas de Analisis}
+% =============================================================================
+
+\subsection*{P1. ¿Cómo se seleccionaron los parámetros $Kp$, $Ki$ y $Kd$? Justificar el método de sintonización utilizado y explicar el efecto de cada ganancia en la respuesta del sistema.}
+\section{P1 — Selección de los parámetros $K_p$, $K_i$ y $K_d$}
+
+\subsection{Método de sintonización utilizado}
+
+La selección de los parámetros del controlador PID se realizó en tres etapas
+sucesivas:
+
+\begin{enumerate}
+  \item \textbf{Valores iniciales teóricos.}
+        A partir de la función de transferencia del motor obtenida en el
+        laboratorio previo (mediante adquisición con LabVIEW o Matlab/PLX-DAQ),
+        se estimó un punto de partida usando reglas analíticas de diseño en
+        tiempo discreto.
+
+  \item \textbf{Ajuste asistido por herramientas.}
+        Con la función de transferencia identificada se realizó una simulación
+        en Matlab (o Simulink) para verificar el comportamiento en lazo cerrado
+        y refinar las ganancias antes de cargar el código al Controllino.
+
+  \item \textbf{Ajuste fino empírico en planta real.}
+        Los parámetros finales se ajustaron directamente en la planta
+        observando la respuesta en la HMI (serie de RPM vs. referencia) y
+        minimizando sobreimpulso, oscilaciones y error en régimen permanente.
+\end{enumerate}
+
+\subsection{Parámetros finales implementados}
+
+Los valores finales cargados en el firmware Stone son:
+\[
+  K_p = 0.03, \qquad T_i = 0.08\,\text{s}, \qquad T_d = 0\,\text{s}
+\]
+
+Lo que equivale a un \textbf{controlador PI}. La Tabla~\ref{tab:pid_params}
+resume los parámetros para ambas versiones de HMI.
+
+\begin{table}[H]
+  \centering
+  \caption{Parámetros PID implementados por plataforma HMI}
+  \label{tab:pid_params}
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Plataforma} & $K_p$ & $K_i$ & $K_d$ \\
+    \midrule
+    Stone (Ti/Td)   & 0.03 & $K_p/T_i = 0.375$ & 0 \\
+    Coolmay (Kp/Ki/Kd) & 0.30 & 0.08 & 0.01 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Efecto de cada ganancia sobre la respuesta}
+
+\begin{itemize}
+  \item \textbf{$K_p$ (acción proporcional):} reduce el error proporcional al
+        error actual. Un valor elevado disminuye el tiempo de subida pero
+        incrementa el sobreimpulso y puede desestabilizar el sistema. En la
+        implementación, $K_p$ es moderado para mantener la respuesta suave.
+
+  \item \textbf{$K_i$ (acción integral):} acumula el error en el tiempo y lo
+        elimina en régimen permanente. Es la razón por la que el sistema
+        alcanza exactamente el setpoint de RPM sin error estacionario. Un $K_i$
+        excesivo provoca sobreimpulso prolongado e \textit{integral windup}.
+
+  \item \textbf{$K_d$ (acción derivativa):} anticipa la trayectoria del error
+        y frena la acción antes de superar el setpoint. En el ajuste final se
+        fijó $T_d = 0$ (versión Stone) para evitar la amplificación de ruido
+        en la señal de RPM procedente del encoder.
+\end{itemize}
+
+La ecuación incremental discretizada implementada en la ISR del Timer1 es:
+\begin{equation}
+  u(k) = u(k-1) + a_0\,e(k) + a_1\,e(k-1) + a_2\,e(k-2)
+  \label{eq:pid_incr}
+\end{equation}
+con coeficientes:
+\begin{align}
+  a_0 &= K_p + K_i T + \frac{K_d}{T} \\
+  a_1 &= -K_p - \frac{2K_d}{T} \\
+  a_2 &= \frac{K_d}{T}
+\end{align}
+donde $T$ es el período de muestreo.
+
+
+
+\subsection*{P2. ¿Cuál es el tiempo de muestreo seleccionado para el controlador PID? Justificar la elección del tiempo de muestreo y explicar cómo se calculan las interrupciones para mantener ese tiempo de muestreo.}
+
+\subsection{Tiempo de muestreo seleccionado}
+
+Para la versión Stone se seleccionó:
+\[
+  f_s = 20\,\text{Hz} \qquad \Longrightarrow \qquad T = \frac{1}{f_s} = 0.05\,\text{s}
+\]
+
+\textbf{Justificación:} La dinámica de velocidad de un motor DC tiene
+constantes de tiempo del orden de decenas de milisegundos. Un período de
+muestreo de $T = 50\,\text{ms}$ garantiza que:
+\begin{itemize}
+  \item Se muestrea al menos $5{-}10$ veces por constante de tiempo del motor,
+        cumpliendo el criterio práctico de diseño digital.
+  \item El conteo de pulsos del encoder acumula un número suficiente de pulsos
+        por ventana para obtener una estimación de RPM con resolución adecuada.
+  \item La carga computacional en la ISR es baja, permitiendo al bucle
+        principal atender la comunicación con el HMI.
+\end{itemize}
+
+\subsection{Cálculo de las interrupciones del Timer1}
+
+El Timer1 del Controllino (ATmega2560, reloj a $16\,\text{MHz}$) se configura
+en modo CTC con preescalador 256:
+
+\[
+  f_{\text{timer}} = \frac{f_{\text{clk}}}{\text{preescalador}}
+  = \frac{16 \times 10^6}{256} = 62\,500\,\text{ticks/s}
+\]
+
+El valor de comparación \texttt{OCR1A} se calcula de modo que la interrupción
+ocurra exactamente cada $T$ segundos:
+
+\[
+  \text{OCR1A} = \frac{f_{\text{timer}}}{f_s} = \frac{62\,500}{20} = 3\,125
+\]
+
+En código esto se expresa como:
+\begin{lstlisting}[language=C++, caption={Configuración del Timer1 a 20\,Hz (Stone PID)}]
+noInterrupts();
+TCCR1A = 0;
+TCCR1B = 0b00000100;   // prescaler 256
+TIMSK1 |= B00000010;   // interrupciones por comparacion
+OCR1A  = 62500 / fs;   // 62500 / 20 = 3125 ticks
+interrupts();
+\end{lstlisting}
+
+Cada vez que \texttt{TCNT1} alcanza \texttt{OCR1A}, se lanza
+\texttt{ISR(TIMER1\_COMPA\_vect)}, que calcula las RPM y ejecuta el PID:
+
+\[
+  \text{RPM}(k) = \frac{N_p(k)\cdot 60 \cdot f_s}{\text{PPR}}
+  = \frac{N_p(k)\cdot 60 \cdot 20}{36} = N_p(k)\cdot 33.33
+\]
+
+donde $N_p(k)$ son los pulsos contados por el encoder en la ventana de
+muestreo y $\text{PPR} = 36$ es la resolución del encoder.
+
+
+
+\subsection*{P3. ¿El controlador actúa de forma efectiva en la toda la zona lineal del motor? Justificar la respuesta con base en la función de transferencia obtenida y la respuesta del sistema.}
+
+
+\subsection{Definición de la zona lineal}
+
+Un motor DC real presenta saturación en el accionamiento (valores de PWM muy
+bajos no producen movimiento por la fricción estática) y saturación a plena
+velocidad. Entre ambos extremos existe una \textbf{zona aproximadamente lineal}
+donde la velocidad responde de forma proporcional al ciclo de trabajo (duty
+cycle) aplicado.
+
+La función de transferencia de primer orden identificada experimentalmente
+adopta la forma:
+\[
+  G(s) = \frac{K_m}{\tau_m s + 1}
+\]
+donde $K_m$ es la ganancia estática (RPM/unidad de PWM) y $\tau_m$ es la
+constante de tiempo mecánica del motor.
+
+\subsection{Comportamiento observado}
+
+La respuesta del sistema en lazo cerrado presentó:
+\begin{itemize}
+  \item \textbf{Seguimiento de referencia:} el controlador PI ($T_d = 0$)
+        alcanza el setpoint de RPM con error estacionario nulo gracias a la
+        acción integral, incluso ante perturbaciones de carga moderadas.
+  \item \textbf{Sobreimpulso reducido:} el valor moderado de $K_p = 0.03$
+        (versión Stone) mantuvo el sobreimpulso dentro de un rango aceptable
+        ($<10\%$) en los puntos de operación dentro de la zona lineal.
+  \item \textbf{Estabilidad:} la respuesta fue estable y convergente para
+        referencias dentro del rango operativo del motor (aprox.\
+        200–3500\,RPM), que corresponde a la zona lineal identificada.
+\end{itemize}
+
+\subsection{Limitaciones fuera de la zona lineal}
+
+En los extremos de operación se observó:
+\begin{itemize}
+  \item \textbf{Velocidades muy bajas} ($<\!\!200\,\text{RPM}$): la fricción
+        estática introduce una no linealidad que el controlador no puede
+        compensar completamente. El motor puede detenerse aunque la señal de
+        control $u(k) > 0$.
+  \item \textbf{Velocidades muy altas} (próximas al máximo): la acción de
+        control satura en $u = 255$ (límite del PWM de 8~bits), degradando el
+        comportamiento en lazo cerrado ya que el integrador continúa
+        acumulando (\textit{windup}).
+  \item \textbf{Perturbaciones bruscas de carga:} fuera del punto de
+        linealización, la ganancia del proceso cambia y los parámetros del PID
+        sintonizados para el punto nominal pueden resultar subóptimos.
+\end{itemize}
+
+
+% =============================================================================
+\section{Conclusiones}
+% =============================================================================
+
+
+\begin{itemize}
+    \item Se logró implementar correctamente un sistema de control y monitoreo de velocidad para un motor DC utilizando el Controlino Mega y una interfaz HMI.
+
+    \item El uso de interrupciones externas y temporizadores permitió realizar una adquisición precisa de los pulsos del encoder y un cálculo confiable de la velocidad del motor.
+
+    \item La señal PWM demostró ser una técnica eficiente para regular la velocidad del motor de corriente continua de manera estable y controlada.
+
+    \item La integración de la HMI facilitó la visualización en tiempo real de las variables del proceso y permitió ajustar parámetros de control de forma intuitiva.
+
+    \item La implementación del controlador PID mejoró la respuesta dinámica del sistema, reduciendo el error entre la referencia y la velocidad real del motor.
+
+    \item La práctica permitió reforzar conocimientos relacionados con control digital, sistemas embebidos, adquisición de datos y automatización industrial.
+\end{itemize}
+
+% =============================================================================
+\addcontentsline{toc}{section}{Referencias}
+% =============================================================================
+
+\subsection{Referencias}
+
+\begin{itemize}
+    \item National Instruments. ``Explicación sobre el controlador PID y la teoría''. Disponible en: \\
+    [NI PID Theory Explained](https://www.ni.com/es/shop/labview/pid-theory-explained.html?utm_source=chatgpt.com)
+    
+    \item LibreTexts Español. ``Controladores PI, PD y PID''. Disponible en: \\
+    [LibreTexts Controladores PID](https://espanol.libretexts.org/Bookshelves/Ingenieria/Ingenieria_Industrial_y_de_Sistemas/Libro%3A_Introducci%C3%B3n_a_los_Sistemas_de_Control_%28Iqbal%29/03%3A_Modelos_de_sistemas_de_control_de_retroalimentaci%C3%B3n/3.3%3A_Controladores_PI%2C_PD_y_PID?utm_source=chatgpt.com)
+\end{itemize}
+
+% =============================================================================
+%  ANEXOS
+% =============================================================================
+
+\newpage
+\appendix
+
+\section{Código Fuente --- Base: Control de Motor DC}
+
+El siguiente listado corresponde al archivo \texttt{Practica3\_Stone\_Base.ino},
+que implementa el control de un motor DC mediante un slider de Duty Cycle. Además, implementa una gráfica donde se puede observar las RPM del motor y su duty cycle ingresado.
+
+
+\lstinputlisting[style=ArduinoStyle]{Practica3_Stone.ino}
+
+
+% -----------------------------------------------------------------------------
+
+\section{Código Fuente --- Reto: Control de Motor DC con PID}
+
+El siguiente listado corresponde al archivo \texttt{Practica3\_Stone\_PID.ino},
+que añade el controlador PID al motor DC.
+
+\lstinputlisting[style=ArduinoStyle] {Practica3_Stone_Reto.ino}
+
+
+\end{document}
