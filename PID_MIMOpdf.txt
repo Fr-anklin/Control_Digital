@@ -1,0 +1,2070 @@
+CONTROL
+DIGITAL
+Métodos de ajus te de
+controladores
+1 . Aju s te de co n tro la do res PI D pa ra
+s is tem as de un a e ntrad a y u na s al ida
+2. Aju ste d e c ont ro l ad o re s PI D e n c as c ad a
+3. Aju ste d e c ont ro l ad o re s PI D e n s is te mas
+m ulti va r iab l es
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+Métodos de sintonía
+• S-IMC: Sintonía de control por modelo
+interno
+• Ziegler-Nichols
+• Cohen-Coon
+• Ciancone y López
+• Lugar de las raíces
+• Ajuste optimizado
+
+PID Industrial
+PID académico + modificaciones
+• Filtro de la derivada
+• Ponderación de la referencia (2DOF)
+• Antiwindup
+• Reseteo de la acción integral
+• Otras
+
+• Sigurd Skogestad*
+2
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+S-IMC: Sintonía de control por modelo interno
+• Se requiere conocer la dinámica del proceso a controlar
+• Está restringido a dinámicas con uno o dos polos. Uno de los polos puede ser un
+integrador puro.
+• El proceso dinámico puede presentar retardos.
+• Se requiere un modelo patrón que refleje el comportamiento del proceso controlado.
+• Requiere cálculos mínimos y el uso de una tabla para determinar los parámetros Kp,
+Ti y Td.
+
+• El método permite determinar los valores de Kp, Ti y Td considerando una estructura
+en serie.
+3
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+Controlador PID
+Estructura Serie
+
+D
+
+I
++
+
++
+
+1
+𝑃𝐼𝐷𝑠𝑒𝑟𝑖𝑒 = 𝐾𝑝′ 1 + ′
+𝑇𝑖 𝑠
+
+1 + 𝑇𝑑′ 𝑠
+
+𝑇𝑖 ′ 𝑠 + 1
+𝑃𝐼𝐷𝑠𝑒𝑟𝑖𝑒 = 𝐾𝑝′
+𝑇𝑖 ′ 𝑠
+
+1 + 𝑇𝑑′ 𝑠
+
+P
+
+4
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+S-IMC: Sintonía de control por modelo interno
+Paso 1: Conocer el comportamiento del proceso a controlar (tiempo de establecimiento)
+Posibles casos para la apicación del método:
+
+𝐺𝑝 𝑠 =
+
+𝐾𝑐
+𝑒 −𝜃𝑠
+(𝜏1 𝑠 + 1)(𝜏2 𝑠 + 1)
+
+𝐾𝑐
+𝐺𝑝 𝑠 =
+𝑒 −𝜃𝑠
+𝜏1 𝑠 + 1
+𝐾𝑐
+𝐺𝑝 𝑠 =
+𝑒 −𝜃𝑠
+𝑠 (𝜏2 𝑠 + 1)
+𝐾𝑐 −𝜃𝑠
+𝐺𝑝 𝑠 =
+𝑒
+𝑠
+
+𝜏1 ≥ 𝜏2
+
+𝑇𝑠𝑝 ≈ 4𝜏1 + 𝜃
+𝑇𝑠𝑝 ≈ 4𝜏1 + 𝜃
+
+𝑁𝐴
+𝑁𝐴
+5
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+S-IMC: Sintonía de control por modelo interno
+Paso 2: Definir las prestaciones que se quieren alcanzar con el sistema controlado
+(tiempo de establecimiento de un sistema de primer orden)
+
+1
+𝐺𝑓 𝑠 =
+𝑒 −𝜃𝑠
+𝝉𝒄 𝑠 + 1
+
+𝑇𝑠 ≈ 4𝜏𝑐 + 𝜃
+
+Para que el método S-IMC tenga buenas prestaciones, es recomendable seleccionar 𝜏𝑐 ≥ 𝜃
+
+6
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+S-IMC: Sintonía de control por modelo interno
+Paso 3: Aplicar la siguiente tabla para obtener los parámetros del controlador
+
+𝑮𝒑(𝒔)
+
+𝐾𝑐
+𝑒 −𝜃𝑠
+(𝜏1 𝑠 + 1)(𝜏2 𝑠 + 1)
+𝐾𝑐
+𝑒 −𝜃𝑠
+𝜏1 𝑠 + 1
+𝐾𝑐
+𝑒 −𝜃𝑠
+𝑠 (𝜏2 𝑠 + 1)
+𝐾𝑐 −𝜃𝑠
+𝑒
+𝑠
+
+𝑲𝒑′
+
+𝜏1
+𝐾𝑐(𝜏𝑐 + 𝜃)
+
+1
+𝐾𝑐(𝜏𝑐 + 𝜃)
+
+𝑻𝒊′
+
+𝑚𝑖𝑛[𝜏1 , 4 𝜏𝑐 + 𝜃 ]
+
+𝑻𝒅′
+
+𝜏2
+−
+
+4(𝜏𝑐 + 𝜃)
+
+𝜏2
+−
+7
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+S-IMC: Sintonía de control por modelo interno
+Paso 4: A partir de los valores de Kp, Ti y Td encontrados, en caso se requiera, se debe
+hacer las transformaciones necesarias para el formato ISA o paralelo.
+1
+𝑃𝐼𝐼𝑆𝐴 = 𝐾𝑝 1 +
+𝑇𝑖𝑠
+1
+𝑃𝐼𝐷𝐼𝑆𝐴 = 𝐾𝑝 1 +
++ 𝑇𝑑𝑠
+𝑇𝑖𝑠
+
+𝐾𝑝 = 𝐾𝑝′
+
+𝑇𝑖 = 𝑇𝑖′
+
+𝐾𝑝 = 𝐾𝑝′ 1 +
+
+𝑇𝑑′
+𝑇𝑖′
+
+𝑇𝑖 = 𝑇𝑖′ 1 +
+
+𝑇𝑑′
+𝑇𝑖′
+
+𝑇𝑑 =
+
+𝑇𝑑′
+1 + 𝑇𝑑′ /𝑇𝑖′
+
+8
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+S-IMC: Sintonía de control por modelo interno
+Ejemplo: Diseñar un controlador PID para el siguiente proceso de segundo orden. Se
+requiere que el tiempo de establecimiento sea de aproximadamente 60s.
+
+0.1
+𝐺𝑝 𝑠 =
+(15𝑠 + 1)(5𝑠 + 1)
+
+9
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+S-IMC: Sintonía de control por modelo interno
+Ejemplo: Diseñar un controlador PID para el siguiente proceso de segundo orden. Se
+requiere que el tiempo de establecimiento sea aproximadamente de 60s.
+
+1
+𝐺𝑓 𝑠 =
+(𝝉𝒄 𝑠 + 1)
+𝑇𝑠 ≈ 4𝜏𝑐 + 𝜃
+60 ≈ 4𝜏𝑐 + 0
+𝜏𝑐 ≈ 15
+10
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+S-IMC: Sintonía de control por modelo interno
+Ejemplo: Diseñar un controlador PID para el siguiente proceso de segundo orden. Se
+requiere que el tiempo de establecimiento sea aproximadamente de 60s.
+
+0.1
+𝐺𝑝 𝑠 =
+(15𝑠 + 1)(5𝑠 + 1)
+
+𝐾𝑝′ =
+
+𝜏1
+𝐾𝑐(𝜏𝑐 + 𝜃)
+
+𝑇𝑖′ = 𝑚𝑖𝑛[𝜏1 , 4 𝜏𝑐 + 𝜃 ]
+
+𝑇𝑑′ = 𝜏2
+
+15
+𝐾𝑝′ =
+0.1(15 + 0)
+
+𝑇𝑖′ = 𝑚𝑖𝑛[15, 60]
+
+𝑇𝑑′ = 5
+
+𝐾𝑝′ = 10
+
+𝑇𝑖′ = 15
+11
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+S-IMC: Sintonía de control por modelo interno
+Ejemplo: Diseñar un controlador PID para el siguiente proceso de segundo orden. Se
+requiere que el tiempo de establecimiento sea aproximadamente de 60s.
+𝑇𝑑′
+𝐾𝑝 = 𝐾𝑝′ 1 +
+𝑇𝑖′
+
+𝑇𝑑′
+𝑇𝑖 = 𝑇𝑖′ 1 +
+𝑇𝑖′
+
+𝑇𝑑′
+𝑇𝑑 =
+1 + 𝑇𝑑′ /𝑇𝑖′
+
+5
+𝐾𝑝 = 2.17 1 +
+15
+
+5
+𝑇𝑖 = 15 1 +
+15
+
+5
+𝑇𝑑 =
+1 + 5/15
+
+𝐾𝑝 = 13.33
+
+𝑇𝑖 = 20
+
+𝑇𝑑 = 3.75
+
+12
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+S-IMC: Sintonía de control por modelo interno
+
+𝑃𝐼𝐷𝐼𝑆𝐴
+
+13
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+S-IMC: Sintonía de control por modelo interno
+𝑉𝑎𝑟𝑖𝑎𝑏𝑙𝑒 𝑐𝑜𝑛𝑡𝑟𝑜𝑙𝑎𝑑𝑎
+
+𝐴𝑐𝑐𝑖ó𝑛 𝑑𝑒 𝑐𝑜𝑛𝑡𝑟𝑜𝑙
+
+14
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+PI con reset: Integrador de Clegg (CI)
+PI + CI
+
+• Control PI, cuyo estado del integrador se resetea cada que se detecta un cruce por
+cero en el error.
+• Su propósito fundamental es minimizar los tiempos de respuesta.
+• Implementación factible en MATLAB habilitando un reset externo en el integrador.
+
+15
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+PI con reset: Integrador de Clegg (CI)
+• La dinámica del Integrador de Clegg no acumula continuamente, sino que se reinicia
+cuando el error cambia de signo:
+Si 𝑒 𝑡 − ⋅ 𝑒 𝑡 < 0 → resetea el ingrador: ∫ 𝑒 𝜏 𝑑𝜏 = 0
+Esquema típico PI+CI
+
+1-Preset
+
+Preset
+
+𝑃𝑟𝑒𝑠𝑒𝑡 → 𝑝𝑜𝑟𝑐𝑒𝑛𝑡𝑎𝑗𝑒 𝑑𝑒 𝑟𝑒𝑠𝑒𝑡𝑒𝑜
+𝑉𝑎𝑙𝑜𝑟 𝑒𝑛𝑡𝑟𝑒 𝑐𝑒𝑟𝑜 𝑦 𝑢𝑛𝑜
+16
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+PI con reset: Integrador de Clegg (CI)
+Sintonía para sistemas de primer orden
+
+• Para ajustar los parámetros del controlador, en primera instancia se sintoniza el
+controlador PI.
+• La sintonía del controlador PI debe provocar oscilaciones en la respuesta.
+• A continuación, se debe ajustar el parámetro Pr, para esto se necesita encontrar los
+polos complejos conjugados del sistema controlado
+R
+
++
+-
+
+𝐾𝑝𝑇𝑖𝑠 + 𝐾𝑝
+𝑇𝑖𝑠
+
+𝐾
+𝜏𝑠 + 1
+
+Y
+
+𝐾𝐾𝑝
+𝛼 =1+
+2𝜏
+
+𝛽=
+
+𝐾𝐾𝑝
+− 𝛼2
+𝜏𝑇𝑖
+
+𝑒 −𝛼𝜋/𝛽
+𝑃𝑟𝑒𝑠𝑒𝑡 =
+1 + 𝑒 −𝛼𝜋/𝛽
+𝑃 = −𝛼 ± 𝑗𝛽
+
+17
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+PI con reset: Integrador de Clegg (CI)
+Sintonía para sistemas de primer orden
+En caso de que el sistema de primer orden tenga tiempo muerto (𝜃) no existe una
+fórmula para Preset. En este sentido se recomienda utilizar valores entre 0.3 y 0.6.
+Para sistemas de segundo orden o superior se debería utilizar una aproximación a
+primer orden con demora, caso contrario, se podría ajustar el valor Preset utilizando
+algún método de ajuste optimizado.
+
+18
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+Ejemplo
+Sintonizar un controlador PI+CI para el sistema de primer orden descrito a continuación
+𝐺 𝑠 =
+
+1,6
+232𝑠 + 1
+
+Sintonización del control PI
+
+𝐾𝑝 = 8
+
+𝑇𝑖 = 14
+19
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+Ejemplo
+𝐾𝐾𝑝
+𝛼 =1+
+2𝜏
+1.6 ∗ 8
+𝛼 =1+
+= 0,0297
+2 ∗ 232
+
+𝛽=
+
+𝐾𝐾𝑝
+− 𝛼2
+𝜏𝑇𝑖
+
+𝛽=
+
+1,6 ∗ 8
+− 0,02972 = 0,0553
+2 ∗ 232
+
+𝑒 −𝛼𝜋/𝛽
+𝑃𝑟𝑒𝑠𝑒𝑡 =
+1 + 𝑒 −𝛼𝜋/𝛽
+𝑒 −0,0297𝜋/0,0553
+𝑃𝑟𝑒𝑠𝑒𝑡 =
+= 0,1558
+1 + 𝑒 −0,0297𝜋/0,0553
+
+20
+
+Control digital
+1. Ajuste de controladores PID para sistemas de una entrada y una salida
+Ejemplo
+Variable controlada
+Acción integral
+
+21
+
+CONTROL
+DIGITAL
+Métodos de ajus te de
+controladores
+1. Aju ste d e c ont ro l ad o re s PI D p a ra s is tem as
+d e una entr ad a y un a s al id a
+2 .Aj u s te de co n tr o la do r es PI D en ca s ca da
+3. Aju ste d e c ont ro l ad o re s PI D e n s is te mas
+m ulti va r iab l es
+
+Control digital
+2. Ajuste de controladores PID en cascada
+Introducción
+• Consta de dos lazos de control: uno interno y otro externo.
+• El objetivo principal es minimizar los efectos de la perturbación sobre la variable
+
+controlada.
+• Se requiere una medición adicional.
+Perturbación
+Interno
+
+Externo
+R
+
++
+-
+
+PID1
+
++
+
+PID2
+
+G1
+
+G2
+
+Y
+
+-
+
+23
+
+Control digital
+2. Ajuste de controladores PID en cascada
+Introducción
+Perturbación
+Interno
+
+Externo
+R
+
++
+-
+
+PID1
+
++
+
+PID2
+
+-
+
+Proc.
+Flujo
+
+Y
+
+Proc.
+Nivel
+
+Las perturbaciones que ocurran en el proceso de flujo serán minimizadas por el controlador
+interno (PID2) y afectarán en menor medida al lazo de nivel.
+Siempre el proceso del lazo interno debe ser más rápido que el proceso del lazo externo.
+24
+
+Control digital
+2. Ajuste de controladores PID en cascada
+Introducción
+Procedimiento para la sintonía
+1. Sintonizar el controlador del lazo interno (PID2), valorando la necesidad de incorporar la acción
+derivativa.
+2. Encontrar la función de transferencia total del lazo interno controlado [M1(s)].
+3. Encontrar la función de transferencia M2(s) y sintonizar el controlador del lazo externo (PID1).
+Aquí se debe valorar si se puede o no despreciar M1(s) para no complicar el diseño.
+M2(s)
+M1(s)
+R
+
++
+-
+
+PID1
+
++
+
+PID2
+
+Camisa
+
+Tanque
+
+25
+
+Control digital
+2. Ajuste de controladores PID en cascada
+Ejemplo
+
+T1
+
+Ta
+
+T2
+
+V
+
+V
+
++
+0.8
+2.2𝑠 + 1
+
++
+
+T1
+
+1
+24𝑠 + 1
+
+T2
+
+Caso 1: Control PID convencional
+Caso 2: Control en cascada con PI en lazo externo y PI en lazo interno
+26
+
+Control digital
+2. Ajuste de controladores PID en cascada
+Caso 1: Control PID convencional
+R
+
++
+
+PID
+
+Ta
+V
+
+-
+
++
+0.8
+2.2𝑠 + 1
+
+T1
+
++
+
+1
+24𝑠 + 1
+
+T2
+
+0.8
+𝐺 𝑠 =
+(2.2𝑠 + 1)(24𝑠 + 1)
+Se elige un 𝜏𝑐 de 15 segundos para la sintonía y se utiliza el método S-IMC
+
+𝐾𝑝 = 2,183
+
+𝑇𝑖 = 26.2
+
+𝑇𝑑 = 2.01
+
+𝑁 = 0.8
+27
+
+Control digital
+2. Ajuste de controladores PID en cascada
+Caso 1: Control PID convencional
+
+28
+
+Control digital
+2. Ajuste de controladores PID en cascada
+Caso 2: Control en cascada con PI en lazo externo y PI en lazo interno
+Lazo interno
+
+Ta
+SPT1 +
+
+PI
+
+V
+
+0.8
+2.2𝑠 + 1
+
+-
+
++
+
+T1
+
++
+
+Se elige un 𝜏𝑐 de 1.5 segundos para la sintonía y se utiliza el método S-IMC
+
+𝐾𝑝 = 1,83
+
+𝑇𝑖 = 2.2
+
+𝑃𝐼 𝑠 = 𝐾𝑝 +
+
+𝐾𝑝 𝐾𝑝𝑇𝑖𝑠 + 𝐾𝑝
+=
+𝑇𝑖𝑠
+𝑇𝑖𝑠
+
+𝑃𝐼 𝑠 =
+
+4,02𝑠 + 1,83
+2,2𝑠
+
+29
+
+Control digital
+2. Ajuste de controladores PID en cascada
+Caso 2: Control en cascada con PI en lazo externo y PI en lazo interno
+Lazo externo
++
+
+R
+
+Ta
+PI
+
++
+-
+
+-
+
+4,02𝑠 + 1,83
+2,2𝑠
+
+Ta
+R
+
++
+-
+
+SPT1
+PI
+
+V
+
+0.8
+2.2𝑠 + 1
+
++ T1
++
+
+Se elige un 𝜏𝑐 de 15 segundos
+
+1
+
+3,21𝑠 + 1,46
+(𝑠 + 0,66)(𝑠 + 0,45)
+
+T2
+
+1
+24𝑠 + 1
+
+T1
+
+1
+24𝑠 + 1
+
+T2
+
+para la sintonía y se utiliza el
+método S-IMC
+
+𝐾𝑝 = 1,6
+𝑇𝑖 = 24
+30
+
+Control digital
+2. Ajuste de controladores PID en cascada
+Caso 2: Control en cascada con PI en lazo externo y PI en lazo interno
+
+31
+
+Control digital
+2. Ajuste de controladores PID en cascada
+Caso 2: Control en cascada con PI en lazo externo y PI en lazo interno
+
+Acción de control - actuador
+
+Variable controlada
+
+32
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+• Se utiliza para combatir los efectos de las perturbaciones en los sistemas de control.
+• Requiere una medición adicional (perturbación).
+• No es aplicable para perturbaciones de tipo aleatorio.
+• Gracias a la medición de la perturbación es posible anticiparse a su efecto antes de que
+su efecto se note en la variable controlada.
+• Se requiere de un modelo que relacione el efecto de la perturbación con la salida a
+controlar.
+• A más del modelo de la perturbación se requiere la implementación de un bloque
+conocido como bloque de prealimentación.
+• No requiere particionar la dinámica del proceso como en el control en cascada.
+33
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+Perturbación
+
+Prealimentación
+
+Bloque
+Prealimentación
+
+R
+
+E
+
+Gff(s)
+
+U’
+
+U
+
+Modelo
+Perturbación
+
+G(s)
+
+X
+
+Gd(s)
+
+Y
+
+34
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+
+𝑌 = 𝑋𝐺𝑑 𝑠 + 𝑈𝐺(𝑠)
+𝑈 = 𝑈 ′ + 𝑋𝐺𝑓𝑓(𝑠)
+
+X
+
+Gff(s)
+
+𝑌 = 𝑋𝐺𝑑 𝑠 + 𝐺 𝑠 [𝑈 ′ + 𝑋𝐺𝑓𝑓(𝑠)]
+
+Gd(s)
+
+𝑇𝑒𝑜𝑟𝑒𝑚𝑎 𝑑𝑒 𝑠𝑢𝑝𝑒𝑟𝑝𝑜𝑠𝑖𝑐𝑖ó𝑛 𝑝𝑎𝑟𝑎
+𝑎𝑛𝑎𝑙𝑖𝑧𝑎𝑟 𝑒𝑙 𝑎𝑝𝑜𝑟𝑡𝑒 𝑑𝑒 𝑋:
+U’
+
+U
+
+G(s)
+
+Y
+
+𝑈′ = 0
+𝑌(1) = 𝑋𝐺𝑑 𝑠 + 𝑋𝐺(𝑠)𝐺𝑓𝑓(𝑠)
+
+35
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+𝑌(1) = 𝑋𝐺𝑑 𝑠 + 𝑋𝐺(𝑠)𝐺𝑓𝑓(𝑠)
+𝑆𝑒 𝑝𝑟𝑒𝑡𝑒𝑛𝑑𝑒 𝑞𝑢𝑒 𝑒𝑙 𝑎𝑝𝑜𝑟𝑡𝑒 𝑑𝑒 𝑙𝑎
+
+X
+
+𝑝𝑒𝑟𝑡𝑢𝑟𝑏𝑎𝑐𝑖ó𝑛 𝑋 𝑠𝑜𝑏𝑟𝑒 𝑙𝑎 𝑠𝑎𝑙𝑖𝑑𝑎
+
+Gff(s)
+
+U’
+
+U
+
+Gd(s)
+
+𝑌 𝑠𝑒𝑎 𝑛𝑢𝑙𝑜
+0 = 𝑋𝐺𝑑 𝑠 + 𝑋𝐺(𝑠)𝐺𝑓𝑓(𝑠)
+
+G(s)
+
+Y
+
+−𝐺𝑑(𝑠)
+𝐺𝑓𝑓 𝑠 =
+𝐺(𝑠)
+
+→ 𝐷𝑖𝑛á𝑚𝑖𝑐𝑜
+
+−𝐾𝑑
+𝐺𝑓𝑓 =
+𝐾
+
+→ 𝐸𝑠𝑡á𝑡𝑖𝑐𝑜
+36
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+Control por prealimentación
+
+Control Convencional
+Tin
+
+Tout
+
+Tin
+
+TT
+
+Tout
+
+TT
+TT
+
+TC
+
+M
+
+SP
+TC
+
+Vm
+
+TY
+
+M
+
+SP
+
+Prealimentación
+
+Vm
+37
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+Tin
+
+Tout
+
+TT
+TT
+
+TC
+
+TY
+
+M
+
+SP
+
+Prealimentación
+
+Vm
+
+38
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+Tin
+
+𝑀𝑜𝑑𝑒𝑙𝑜 𝑙𝑖𝑛𝑒𝑎𝑙𝑖𝑧𝑎𝑑𝑜 𝑒𝑛 𝑢𝑛 𝑝𝑢𝑛𝑡𝑜 𝑑𝑒 𝑜𝑝𝑒𝑟𝑎𝑐𝑖ó𝑛:
+
+Tout
+
+𝑇𝑜𝑢𝑡
+0.2
+𝐺 𝑠 =
+=
+𝑒 −4𝑠
+𝑉𝑚
+20𝑠 + 1
+
+TT
+TT
+
+TC
+
+TY
+
+M
+
+SP
+
+Prealimentación
+
+𝑇𝑜𝑢𝑡
+1
+𝐺𝑑 𝑠 =
+=
+𝑒 −4𝑠
+𝑇𝑖𝑛
+5𝑠 + 1
+𝐶𝑎𝑠𝑜 1: 𝐶𝑜𝑛𝑡𝑟𝑜𝑙 𝑐𝑜𝑛𝑣𝑒𝑛𝑐𝑖𝑜𝑛𝑎𝑙
+
+Vm
+
+𝐶𝑎𝑠𝑜 2: 𝐶𝑜𝑛𝑡𝑟𝑜𝑙 𝑝𝑜𝑟 𝑝𝑟𝑒𝑎𝑙𝑖𝑚𝑒𝑛𝑡𝑎𝑐𝑖ó𝑛
+𝑒𝑠𝑡á𝑡𝑖𝑐𝑜
+𝐶𝑎𝑠𝑜 3: 𝐶𝑜𝑛𝑡𝑟𝑜𝑙 𝑝𝑜𝑟 𝑝𝑟𝑒𝑎𝑙𝑖𝑚𝑒𝑛𝑡𝑎𝑐𝑖ó𝑛
+𝑑𝑖𝑛á𝑚𝑖𝑐𝑜
+39
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+𝐶𝑎𝑠𝑜 1: 𝐶𝑜𝑛𝑡𝑟𝑜𝑙 𝑐𝑜𝑛𝑣𝑒𝑛𝑐𝑖𝑜𝑛𝑎𝑙
+
+𝑇𝑜𝑢𝑡
+0.2
+𝐺 𝑠 =
+=
+𝑒 −4𝑠
+𝑉𝑚
+20𝑠 + 1
+
+Según el método de S-IMC para un τc = 10s:
+
+𝐾𝑝 = 7,14
+
+𝑇𝑖 = 20
+
+40
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+𝐶𝑎𝑠𝑜𝑠 2 𝑦 3: 𝐶á𝑙𝑐𝑢𝑙𝑜 𝑑𝑒𝑙 𝑏𝑙𝑜𝑞𝑢𝑒 𝑑𝑒 𝑝𝑟𝑒𝑎𝑙𝑖𝑚𝑒𝑛𝑡𝑎𝑐𝑖ó𝑛
+
+𝑇𝑜𝑢𝑡
+0.2
+𝐺 𝑠 =
+=
+𝑒 −4𝑠
+𝑉𝑚
+20𝑠 + 1
+−𝐺𝑑(𝑠)
+𝐺𝑓𝑓 𝑠 =
+𝐺(𝑠)
+1
+𝑒 −4𝑠
++1
+𝐺𝑓𝑓 𝑠 = 5𝑠
+0.2
+𝑒 −4𝑠
+20𝑠 + 1
+
+−
+
+−5(20𝑠 + 1)
+𝐺𝑓𝑓 𝑠 =
+(5𝑠 + 1)
+
+𝑇𝑜𝑢𝑡
+1
+𝐺𝑑 𝑠 =
+=
+𝑒 −4𝑠
+𝑇𝑖𝑛
+5𝑠 + 1
+
+𝐺𝑓𝑓𝑒𝑠𝑡á𝑡𝑖𝑐𝑜 = −5
+
+−5(20𝑠 + 1)
+𝐺𝑓𝑓 𝑠 𝑑𝑖𝑛á𝑚𝑖𝑐𝑜 =
+(5𝑠 + 1)
+
+41
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+𝐶𝑎𝑠𝑜 2: 𝐶𝑜𝑛𝑡𝑟𝑜𝑙 𝑝𝑜𝑟 𝑝𝑟𝑒𝑎𝑙𝑖𝑚𝑒𝑛𝑡𝑎𝑐𝑖ó𝑛 − 𝑒𝑠𝑡á𝑡𝑖𝑐𝑜
+
+42
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+𝐶𝑎𝑠𝑜 3: 𝐶𝑜𝑛𝑡𝑟𝑜𝑙 𝑝𝑜𝑟 𝑝𝑟𝑒𝑎𝑙𝑖𝑚𝑒𝑛𝑡𝑎𝑐𝑖ó𝑛 − 𝑑𝑖𝑛á𝑚𝑖𝑐𝑜
+
+43
+
+Control digital
+2. Control por prealimentación (feedforward o anticipativo)
+Variable controlada
+
+Variable manipulada
+
+44
+
+CONTROL
+DIGITAL
+Métodos de ajus te de
+controladores
+1. Aju ste d e c ont ro l ad o re s PI D p a ra s is tem as
+d e una entr ad a y un a s al id a
+2. Aju ste d e c ont ro l ad o re s PI D e n c as c ad a
+3 .Aj u s te de co n tr o la do r es PI D en si s tem as
+m ul ti va ria bles
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sistemas multivariables
+𝑢1
+𝑢2
+
+.
+.
+.
+
+𝑦1
+
+MIMO
+
+.
+.
+. 𝑦𝑚
+
+Mantener o regular múltiples variables de un sistema
+𝑴𝑰𝑴𝑶 𝟐𝒙𝟐
+𝑢1 → 𝑝𝑜𝑠𝑖𝑐𝑖ó𝑛 𝑑𝑒 𝑙𝑎 𝑣á𝑙𝑣𝑢𝑙𝑎 1 (𝑥1)
+𝑢2 → 𝑝𝑜𝑠𝑖𝑐𝑖ó𝑛 𝑑𝑒 𝑙𝑎 𝑣á𝑙𝑣𝑢𝑙𝑎 2 (𝑥2)
+𝑦1 → 𝑛𝑖𝑣𝑒𝑙 𝑑𝑒𝑙 𝑡𝑎𝑛𝑞𝑢𝑒 1 (ℎ1)
+𝑦2 → 𝑛𝑖𝑣𝑒𝑙 𝑑𝑒𝑙 𝑡𝑎𝑛𝑞𝑢𝑒 2 (ℎ2)
+46
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sistemas multivariables
+Turbina - caldera tipo tambor
+
+𝑴𝑰𝑴𝑶 𝟑 × 𝟑
+
+¿Si quiero controlar la potencia generada que variable manipulo?
+La misma pregunta me la puedo plantear para el resto de las variables de salida
+47
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sistemas multivariables
+
+𝑴𝑰𝑴𝑶 𝟐 × 𝟐
+𝐺11 → 𝐹𝑢𝑛𝑐𝑖ó𝑛 𝑑𝑒 𝑡𝑟𝑎𝑛𝑠𝑓𝑒𝑟𝑒𝑛𝑐𝑖𝑎 𝑦1 /𝑢1
+
+𝐺11
+𝐺12
+
+𝐺12 → 𝐹𝑢𝑛𝑐𝑖ó𝑛 𝑑𝑒 𝑡𝑟𝑎𝑛𝑠𝑓𝑒𝑟𝑒𝑛𝑐𝑖𝑎 𝑦1 /𝑢2
+𝐺21 → 𝐹𝑢𝑛𝑐𝑖ó𝑛 𝑑𝑒 𝑡𝑟𝑎𝑛𝑠𝑓𝑒𝑟𝑒𝑛𝑐𝑖𝑎 𝑦2/𝑢1
+𝐺22 → 𝐹𝑢𝑛𝑐𝑖ó𝑛 𝑑𝑒 𝑡𝑟𝑎𝑛𝑠𝑓𝑒𝑟𝑒𝑛𝑐𝑖𝑎 𝑦2/𝑢2
+
+𝐺21
+
+𝑦1
+𝐺11
+=
+𝑦2
+𝐺21
+
+𝐺22
+
+𝑦1 = 𝐺11 𝑢1 + 𝐺12 𝑢2
+𝑦2 = 𝐺21 𝑢1 + 𝐺22 𝑢2
+
+𝐺12 𝑢1
+𝐺22 𝑢2
+
+48
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sistemas multivariables
+𝑴𝑰𝑴𝑶 𝟑 × 𝟑
+𝐺11
+𝐺12
+𝐺13
+
+𝑦1
+𝐺11
+𝑦2 = 𝐺21
+𝑦3
+𝐺31
+
+𝐺12
+𝐺22
+𝐺32
+
+𝐺13
+𝐺23
+𝐺33
+
+𝑢1
+𝑢2
+𝑢3
+
+𝐺21
+
+𝐺22
+
+𝑦1 = 𝐺11 𝑢1 + 𝐺12 𝑢2 + 𝐺13 𝑢3
+
+𝐺23
+
+𝑦2 = 𝐺21 𝑢1 + 𝐺22 𝑢2 + 𝐺23 𝑢3
+
+𝐺31
+
+𝑦3 = 𝐺31 𝑢1 + 𝐺32 𝑢2 + 𝐺33 𝑢3
+
+𝐺32
+𝐺33
+
+49
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sistemas multivariables: metodología para el diseño de controladores
+
+1. Encontrar el emparejamiento óptimo para formar los lazos de control.
+2. Sintonizar los controladores PID de cada uno de los lazos de control de forma
+independiente (métodos de sintonía convencionales + variantes del PID)
+3. Analizar las respuestas del sistema controlado y valorar la necesidad de implementar
+sistemas de desacoplamiento.
+4. Si procede, se debe analizar el comportamiento del sistema controlado y el
+desacoplamiento estático y dinámico.
+
+50
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Emparejamiento
+El emparejamiento o “loop pairing” se centra en determinar qué entradas deben controlar qué
+salidas para optimizar el rendimiento del sistema.
+
+𝐺11
+𝑦1 podría controlarse manipulando 𝑢1 o 𝑢2
+
+𝐺12
+𝐺
+G21
+21
+
+𝑦2 también podría controlarse manipulando 𝑢1 o 𝑢2
+
+¿Qué emparejamiento es el óptimo?
+
+𝐺
+G22
+22
+51
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Emparejamiento
+En algunos sistemas multivariables el emparejamiento viene condicionado.
+
+𝑦1
+𝐺11
+𝑦2 = 𝐺21
+𝑦3
+0
+
+𝐺12
+0
+𝐺32
+
+0
+𝐺23
+0
+
+𝑢1
+𝑢2
+𝑢3
+
+• 𝑦3 solo podría controlarse manipulando 𝑢2 , dado que, 𝑢1 y 𝑢3 no tienen incidencia en su
+comportamiento.
+• 𝑦1 podría controlarse manipulando 𝑢1 y 𝑢2 . Dado que 𝑢2 ya está ocupada la única opción sería
+controlar 𝑦1 con 𝑢1.
+• Por descarte, la única opción para controlar 𝑦2 sería utilizar 𝑢3
+52
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Cuando el emparejamiento no viene condicionado
+
+𝑦1
+𝐺11
+𝑦2 = 𝐺21
+𝑦1 → 𝑢1
+
+𝐺𝐶1
+
+𝐺𝐶2
+
+𝐺12 𝑢1
+𝐺22 𝑢2
+
+𝑦2 → 𝑢2
+
+𝑦1 → 𝑢2
+
+𝐺11
+
+𝐺′𝐶1
+
+𝑦2 → 𝑢1
+
+𝐺11
+
+𝐺12
+
+𝐺12
+
+𝐺21
+
+𝐺21
+
+𝐺22
+
+𝐺′𝐶2
+
+?
+
+𝐺22
+
+53
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+
+Para no probar múltiples posibilidades de emparejamiento existe una
+técnica basada en un análisis de régimen estacionario.
+Relative Gain Array - RGA
+
+Analiza las ganancias a nivel estático para ver la relación que
+existe entre las salidas y las entradas.
+
+54
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+A cada Sistema 𝐺𝑖𝑗 le corresponde una ganancia estática 𝐾𝑖𝑗
+
+𝐺11
+𝐺21
+
+𝐾
+𝐺12
+→ 𝐾11
+𝐺22
+21
+
+𝐾12
+𝐾22
+
+1) Análisis de efecto directo: 𝑢2 se mantiene constante y se analiza como un movimiento
+en 𝑢1 afecta a 𝑦1
+∆𝑢1
+
+𝐺11
+𝐺12
+
+𝐺21
+𝐺22
+
+∆𝑦1
+
+𝑘11
+
+∆𝑦1 = ∆𝑢1 𝐾11
+
+∆𝑦1
+= 𝐾11 (𝐿𝐴)
+∆𝑢1
+
+55
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+2) Análisis de efecto de la interacción: Todo el resto bucles cerrados y controlados
+
+𝐺11
+
+∆𝑢1
+
+∆𝑦1
+
+?
+
+∆𝑦1 = ∆𝑢1 𝐾11 + ∆𝑢2 𝐾12
+
+𝐺12
+
+∆𝑦2 = ∆𝑢1 𝐾21 + ∆𝑢2 𝐾22
+𝐺21
+𝐺𝐶1
+
+𝐺22
+
+0 = ∆𝑢1 𝐾21 + ∆𝑢2 𝐾22
+𝐾21
+∆𝑢2 = −
+∆𝑢1
+𝐾22
+
+56
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+2) Análisis de efecto de la interacción: Todo el resto bucles cerrados y controlados
+
+𝐾21
+∆𝑦1 = ∆𝑢1 𝐾11 −
+∆𝑢1 𝐾12
+𝐾22
+
+∆𝑦1 = ∆𝑢1
+
+𝐾21
+𝐾11 −
+𝐾12
+𝐾22
+
+∆𝑦1
+𝐾21
+= 𝐾11 −
+𝐾12 (𝐿𝐶)
+∆𝑢1
+𝐾22
+Directo Interacción
+57
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+Ejemplo
+
+1
+𝑒 −2𝑠
+𝑦1
+(𝑠 + 1)
+=
+𝑦2
+2
+𝑒 −4𝑠
+(1.2𝑠 + 1)
+
+0.75
+𝑒 −𝑠
+𝑢1
+(0.3𝑠 + 1)
+𝑢2
+2
+−2.2𝑠
+𝑒
+(0.8𝑠 + 1)
+
+𝐾=
+
+1 0.75
+2
+2
+
+¿Qué tan interesante resultaría controlar la salida 𝒚𝟏 con la entrada 𝒖𝟏 ?
+∆𝑦1
+= 𝐾11 (𝐿𝐴)
+∆𝑢1
+∆𝑦1
+=1
+∆𝑢1
+En lazo abierto, cambio una unidad
+la entrada uno y cambia una unidad
+la salida uno
+
+∆𝑦1
+𝐾21
+= 𝐾11 −
+𝐾
+∆𝑢1
+𝐾22 12
+
+(𝐿𝐶)
+
+∆𝑦1
+2 ∗ 0.75
+= 1−
+= 0,25
+∆𝑢1
+2
+Cuando la salida 2 está siendo controlada, cambio una
+unidad la entrada uno y cambia un cuarto la salida uno.
+Necesito un esfuerzo de control cuatro veces más grande.
+58
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+𝜆𝑖𝑗 → medida de qué tan bien se puede controlar la salida 𝑦𝑖 con la entrada 𝑢𝑗
+
+𝜆𝑖𝑗 =
+
+∆𝑦𝑖
+ฬ
+∆𝑢𝑗
+
+𝐿𝐴
+
+∆𝑦𝑖
+ฬ
+∆𝑢𝑗
+
+𝐿𝐶 𝑒𝑥𝑐𝑒𝑝𝑡𝑜 𝑦𝑖
+
+Ratio de ganancias estáticas entre la salida 𝑦𝑖 y la entrada 𝑢𝑗
+considerando todos los bucles abiertos frente a todos cerrados
+(excepto el relativo a 𝑦𝑖 )
+
+Matríz de ganancias relativas:
+𝜆11
+𝜆
+Λ = 21
+⋮
+𝜆𝑛1
+
+𝜆12
+𝜆22
+⋮
+𝜆𝑛1
+
+⋯ 𝜆1𝑛
+⋯ 𝜆2𝑛
+⋮
+⋮
+⋯ 𝜆𝑛𝑚
+
+Propiedad 1: Las filas y las columnas siempre suman 1.
+Propiedad 2: 𝜆𝑖𝑗 es adimensional.
+59
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+
+Λ = 𝐾 ⊗ (𝐾 −1 )𝑇
+
+⊗ → 𝑀𝑢𝑙𝑡𝑖𝑝𝑙𝑖𝑐𝑎𝑐𝑖ó𝑛 𝑒𝑙𝑒𝑚𝑒𝑛𝑡𝑜 𝑎 𝑒𝑙𝑒𝑚𝑒𝑛𝑡𝑜 (𝑛𝑜 𝑚𝑎𝑡𝑟𝑖𝑐𝑖𝑎𝑙)
+
+En MATLAB:
+
+En un sistema 2x2 se puede calcular el primer elemento de Λ utilizando la fórmula de 𝜆𝑖𝑗 , es
+decir, dividiendo la ganancia en lazo abierto 𝐾11 para la ganancia debido a la interacción en bucle
+cerrado. A continuación se aplica la propiedad 1 de la matriz RGA.
+Para sistemas de 3x3 en adelante, lo recomendable es aplicar directamente la fórmula expuesta
+en esta diapositiva.
+60
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+Ejemplo: sistema 2x2
+1
+0.75
+𝑒 −2𝑠
+𝑒 −𝑠
+𝑦1
+𝑢1
+(𝑠 + 1)
+(0.3𝑠 + 1)
+=
+𝑦2
+𝑢2
+2
+2
+−4𝑠
+−2.2𝑠
+𝑒
+𝑒
+(1.2𝑠 + 1)
+(0.8𝑠 + 1)
+
+𝜆11 =
+Λ=
+
+𝐾=
+
+𝜆𝑖𝑗 =
+
+1
+2
+
+0.75
+2
+∆𝑦𝑖
+ฬ
+∆𝑢𝑗
+
+𝐿𝐴
+
+1
+=4
+0,25
+
+4
+−3
+
+−3
+4
+
+En MATLAB:
+K=[1 0.75; 2 2]
+RGA=K.*inv(K)'
+
+∆𝑦𝑖
+ฬ
+∆𝑢𝑗
+
+𝐿𝐶 𝑒𝑥𝑐𝑒𝑝𝑡𝑜 𝑦𝑖
+
+𝜆11 =
+
+𝐾11
+𝐾
+𝐾11 − 21 𝐾12
+𝐾22
+
+61
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+Ejemplo: sistema 3x3
+
+𝑦1
+𝑦2
+𝑦3
+
+2
+1
+2
+𝑠 2 + 1.3𝑠 + 0.8 𝑠 2 + 4.2𝑠 + 3.3
+1.3𝑠 + 1
+𝑢1
+0.5
+4
+1
+𝑢2
+= 2
+2
+2
+𝑠 + 0.5𝑠 + 2.6 𝑠 + 4𝑠 + 6.6 𝑠 + 11.3𝑠 + 5.7 𝑢3
+3
+4
+6
+𝑠 2 + 6.3𝑠 + 5
+3.3𝑠 + 1
+5.3𝑠 + 1
+
+2.5
+𝐾 = 0.19
+0.6
+
+0.3
+0.6
+4
+
+2
+0.17
+6
+
+En MATLAB:
+K=[2.5 0.3 2;0.19 0.6 0.17;0.6 4 6];
+RGA=K.*inv(K)'
+
+62
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+Cálculo de K en MATLAB
+𝑦1
+𝑦2
+𝑦3
+
+2
+𝑠 2 + 1.3𝑠 + 0.8
+0.5
+= 2
+𝑠 + 0.5𝑠 + 2.6
+3
+𝑠 2 + 6.3𝑠 + 5
+
+1
+𝑠 2 + 4.2𝑠 + 3.3
+4
+𝑠 2 + 4𝑠 + 6.6
+4
+3.3𝑠 + 1
+
+2
+1.3𝑠 + 1
+𝑢1
+1
+𝑢2
+2
+𝑠 + 11.3𝑠 + 5.7 𝑢3
+6
+5.3𝑠 + 1
+
+ns={2 1 2;0.5 4 1;3 4 6};
+ds={[1 1.3 0.8] [1 4.2 3.3] [1.3 1];[1 0.5 2.6] [1 4 6.6] [1 11.3 5.7];[1 6.3 5] [3.3 1] [5.3 1]}
+sys=tf(ns,ds)
+K=dcgain(sys)
+RGA=K.*inv(K)'
+
+63
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+Interpretación de la matriz
+𝜆11
+𝜆
+Λ = 21
+⋮
+𝜆𝑛1
+
+𝜆12
+𝜆22
+⋮
+𝜆𝑛1
+
+⋯ 𝜆1𝑛
+⋯ 𝜆2𝑛
+⋮
+⋮
+⋯ 𝜆𝑛𝑚
+
+𝜆𝑖𝑗 =
+
+∆𝑦𝑖
+ฬ
+∆𝑢𝑗
+∆𝑦𝑖
+ฬ
+∆𝑢𝑗
+
+𝐿𝐴
+
+𝜆𝑖𝑗 =
+
+𝑒𝑓𝑒𝑐𝑡𝑜 𝑑𝑖𝑟𝑒𝑐𝑡𝑜
+𝑒𝑓𝑒𝑐𝑡𝑜 𝑑𝑖𝑟𝑒𝑐𝑡𝑜 + 𝑒𝑓𝑒𝑐𝑡𝑜 𝑖𝑛𝑡𝑒𝑟𝑎𝑐𝑐𝑖ó𝑛
+
+𝐿𝐶 𝑒𝑥𝑐𝑒𝑝𝑡𝑜 𝑦𝑖
+
+• 𝜆𝑖𝑗 = 1: Caso ideal, no hay efecto de interacción, por lo tanto, se debería emparejar 𝑢𝑗 − 𝑦𝑖 .
+• 𝜆𝑖𝑗 = 0: No emparejar, ya que el efecto directo puede ser cero o el efecto de la interacción infinito.
+• 0 < 𝜆𝑖𝑗 < 1: El efecto directo y la interacción están en el mismo sentido. Hay tres casos para
+análisis:
+o 𝜆𝑖𝑗 < 0.5 → 𝑒𝑓𝑒𝑐𝑡𝑜 𝑖𝑛𝑡𝑒𝑟𝑎𝑐𝑐𝑖ó𝑛 > 𝑒𝑓𝑒𝑐𝑡𝑜 𝑑𝑖𝑟𝑒𝑐𝑡𝑜 (evitar emparejamiento).
+o 𝜆𝑖𝑗 > 0.5 → 𝑒𝑓𝑒𝑐𝑡𝑜 𝑖𝑛𝑡𝑒𝑟𝑎𝑐𝑐𝑖ó𝑛 < 𝑒𝑓𝑒𝑐𝑡𝑜 𝑑𝑖𝑟𝑒𝑐𝑡𝑜 (emparejamiento posible).
+o 𝜆𝑖𝑗 = 0.5 → 𝑒𝑓𝑒𝑐𝑡𝑜 𝑖𝑛𝑡𝑒𝑟𝑎𝑐𝑐𝑖ó𝑛 = 𝑒𝑓𝑒𝑐𝑡𝑜 𝑑𝑖𝑟𝑒𝑐𝑡𝑜 (emparejamiento posible si no hay más opciones).
+64
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+Interpretación de la matriz
+𝜆11
+𝜆
+Λ = 21
+⋮
+𝜆𝑛1
+
+𝜆12
+𝜆22
+⋮
+𝜆𝑛1
+
+⋯ 𝜆1𝑛
+⋯ 𝜆2𝑛
+⋮
+⋮
+⋯ 𝜆𝑛𝑚
+
+𝜆𝑖𝑗 =
+
+∆𝑦𝑖
+ฬ
+∆𝑢𝑗
+∆𝑦𝑖
+ฬ
+∆𝑢𝑗
+
+𝐿𝐴
+
+𝜆𝑖𝑗 =
+
+𝑒𝑓𝑒𝑐𝑡𝑜 𝑑𝑖𝑟𝑒𝑐𝑡𝑜
+𝑒𝑓𝑒𝑐𝑡𝑜 𝑑𝑖𝑟𝑒𝑐𝑡𝑜 + 𝑒𝑓𝑒𝑐𝑡𝑜 𝑖𝑛𝑡𝑒𝑟𝑎𝑐𝑐𝑖ó𝑛
+
+𝐿𝐶 𝑒𝑥𝑐𝑒𝑝𝑡𝑜 𝑦𝑖
+
+• 𝜆𝑖𝑗 > 1: El efecto directo es contrario al efecto de la interacción y |efecto interacción|< efecto
+directo. El lazo será difícil de controlar. De ser posible se debería evitar el emparejamiento. Mientras
+más grande sea 𝜆𝑖𝑗 más complicado será el control.
+• 𝜆𝑖𝑗 < 0: El efecto directo es contrario al efecto de la interacción y |efecto interacción|> efecto
+directo. No emparejar
+• 𝜆𝑖𝑗 = ∞: El efecto directo y la interacción son iguales, pero con el signo contrario. No emparejar.
+Control imposible.
+65
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+Interpretación de la matriz
+𝜆11
+𝜆
+Λ = 21
+⋮
+𝜆𝑛1
+
+𝜆12
+𝜆22
+⋮
+𝜆𝑛1
+
+⋯ 𝜆1𝑛
+⋯ 𝜆2𝑛
+⋮
+⋮
+⋯ 𝜆𝑛𝑚
+
+𝜆𝑖𝑗 =
+
+∆𝑦𝑖
+ฬ
+∆𝑢𝑗
+∆𝑦𝑖
+ฬ
+∆𝑢𝑗
+
+𝐿𝐴
+
+𝜆𝑖𝑗 =
+
+𝑒𝑓𝑒𝑐𝑡𝑜 𝑑𝑖𝑟𝑒𝑐𝑡𝑜
+𝑒𝑓𝑒𝑐𝑡𝑜 𝑑𝑖𝑟𝑒𝑐𝑡𝑜 + 𝑒𝑓𝑒𝑐𝑡𝑜 𝑖𝑛𝑡𝑒𝑟𝑎𝑐𝑐𝑖ó𝑛
+
+𝐿𝐶 𝑒𝑥𝑐𝑒𝑝𝑡𝑜 𝑦𝑖
+
+SÍNTESIS DE RESULTADOS
+Las mejores opciones de emparejamiento se dan cuando 𝜆𝑖𝑗 es cercano a 1. Es preferible tener
+valores entre 0.5 y 1. Aunque, valores por encima de 1 también podrían ser buenas opciones de
+emparejamiento. No obstante, mientras más nos alejamos de 1, el control del lazo se tornará
+complicado. Se recomienda no seleccionar emparejamientos con 𝜆𝑖𝑗 > 10.
+
+66
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+Interpretación de la matriz
+1
+𝑒 −2𝑠
+𝑦1
+(𝑠 + 1)
+=
+𝑦2
+2
+𝑒 −4𝑠
+(1.2𝑠 + 1)
+
+𝑦1
+𝑦2
+𝑦3
+
+2
+𝑠 2 + 1.3𝑠 + 0.8
+0.5
+= 2
+𝑠 + 0.5𝑠 + 2.6
+3
+𝑠 2 + 6.3𝑠 + 5
+
+𝑢1 − 𝑦1
+
+0.75
+𝑒 −𝑠
+𝑢1
+(0.3𝑠 + 1)
+𝑢2
+2
+−2.2𝑠
+𝑒
+(0.8𝑠 + 1)
+
+1
+𝑠 2 + 4.2𝑠 + 3.3
+4
+𝑠 2 + 4𝑠 + 6.6
+4
+3.3𝑠 + 1
+
+2
+1.3𝑠 + 1
+𝑢1
+1
+𝑢2
+𝑠 2 + 11.3𝑠 + 5.7 𝑢3
+6
+5.3𝑠 + 1
+
+𝑢2 − 𝑦2
+
+𝑢1 − 𝑦1
+𝑢2 − 𝑦2
+
+𝑢3 − 𝑦3
+67
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Relative Gain Array - RGA
+Índice de Niederlinski (NI) permite analizar la estabilidad de los emparejamientos de bucles de
+control seleccionados por medio de la matriz RGA.
+
+|𝐾|
+𝑁𝐼 = 𝑛
+ς𝑖=1 𝐾𝑖𝑖
+Si 𝑁𝐼 < 0 el sistema es inestable con cualquier control que tenga acción integral
+Aplicable para emparejamientos establecidos con la diagonal
+𝜆11
+𝜆
+Λ = 21
+⋮
+𝜆𝑛1
+
+𝜆12
+𝜆22
+⋮
+𝜆𝑛1
+
+⋯ 𝜆1𝑛
+⋯ 𝜆2𝑛
+⋮
+⋮
+⋯ 𝜆𝑛𝑚
+
+68
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sintonía de un sistema multivariable: Columna de destilación de Wood and Berry
+
+L
+xD
+V
+xB
+
+D. Kalpana, T. Thyagarajan and N. Venkatachalam, "Design of fractional order PI controller for MIMO system using relay feedback," 2017 Trends
+in Industrial Measurement and Automation (TIMA), Chennai, India, 2017, pp. 1-7, doi: 10.1109/TIMA.2017.8064775.
+
+69
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sintonía de un sistema multivariable: Columna de destilación de Wood and Berry
+Definición de la planta en MATLAB y cálculo de la matriz RGA
+G(1,1)=tf(12.8,[16.7 1],'ioDelay',1)
+G(1,2)=tf(-18.9,[21 1],'ioDelay',3)
+G(2,1)=tf(6.6,[10.9 1],'ioDelay',7)
+G(2,2)=tf(-19.4,[14.4 1],'ioDelay',3)
+K=dcgain(G)
+RGA=K.*inv(K)'
+
+𝑢1
+
+𝑢2
+
+𝑢1 − 𝑦1
+𝑦1
+𝑦2
+
+𝑢2 − 𝑦2
+
+70
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sintonía de un sistema multivariable: Columna de destilación de Wood and Berry
+Diseño de los controladores:
+
+12.8
+𝐺11 =
+𝑒 −𝑠
+16.7𝑠 + 1
+
+𝑆 − 𝐼𝑀𝐶 𝑝𝑎𝑟𝑎 𝑢𝑛 𝜏𝑐 = 13𝑠
+𝐾𝑝 = 0.09 ; 𝑇𝑖 = 16.7
+
+−19.4 −3𝑠
+𝐺22 =
+𝑒
+14.4𝑠 + 1
+
+𝑆 − 𝐼𝑀𝐶 𝑝𝑎𝑟𝑎 𝑢𝑛 𝜏𝑐 = 11𝑠
+𝐾𝑝 = −0.05 ; 𝑇𝑖 = 14.4
+71
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sintonía de un sistema multivariable: Columna de destilación de Wood and Berry
+
+72
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sintonía de un sistema multivariable: Columna de destilación de Wood and Berry
+Para probar: Desconecte las interacciones y valide la sintonía de los dos controladores por separado
+
+73
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sintonía de un sistema multivariable: Columna de destilación de Wood and Berry
+Para probar: Desconecte las interacciones y valide la sintonía de los dos controladores por separado
+
+74
+
+Control digital
+3. Ajuste de controladores PID en sistemas multivariables
+Sintonía de un sistema multivariable: Columna de destilación de Wood and Berry
+Para probar: Conecte las interacciones y observe las respuestas del sistema
+
+75
+
+Control digital
+Tarea no. 3
+Ejercicio 1. Ajuste de controladores PID para sistemas SISO
+S-IMC: Sintonía de control por modelo interno
+Diseñar los controladores PID correspondientes para los siguientes procesos.
+Proceso
+
+Requerimientos
+
+0.4
+𝐺𝑝 𝑠 =
+𝑒 −𝑠
+(5𝑠 + 1)(2𝑠 + 1)
+
+Tiempo de establecimiento 19s
+
+1.3
+𝐺𝑝 𝑠 =
+𝑒 −1.3𝑠
+(3.2𝑠 + 1)
+
+Tiempo de establecimiento 11s
+76
+
+Control digital
+Tarea no. 3
+Ejercicio 2. Controlador MIMO para sistema multitanques
+Aplicar la metodología de diseño de controladores MIMO PID al sistema multitanques.
+1.
+
+Hallar el modelo linealizado del sistema multitanques
+
+2.
+
+Encontrar la matriz de ganancias relativas (RGA)
+
+3.
+
+Seleccionar los lazos de control y justificar el criterio de enlace entre las variables.
+
+4.
+
+Sintonizar los lazos de control utilizando IMC
+
+5.
+
+Simular el sistema en Simulink. Utilizar el modelo no lineal para simular el sistema.
+
+6.
+
+Estimar los flujos de enlace y salida del sistema. Aplicar una arquitectura de control en cascada.
+
+7.
+
+Generar un reporte que incluya la metodología de diseño, los resultados de simulación en lazo
+cerrado con diferentes ajustes de consigna y perturbación. Comparar el desempeño del
+controlador con la arquitectura en cascada con el controlado simple.
+77
+
+78
+
+

@@ -1,0 +1,363 @@
+\documentclass[journal, onecolumn]{IEEEtran}
+
+% --- Codificacion y lenguaje -------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish, es-tabla]{babel}
+
+% --- Margenes ----------------------------------------------------------------
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{ArduinoStyle}{
+    language=C++,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{orange},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true,
+    backgroundcolor=\color{gray!10}
+}
+
+% --- Graficos y figuras ------------------------------------------------------
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{float}
+
+% --- Colores -----------------------------------------------------------------
+\usepackage{xcolor}
+\definecolor{azulTitulo}{RGB}{0,70,127}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% --- Tablas ------------------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+
+% --- Hipervinculos -----------------------------------------------------------
+\usepackage[hidelinks]{hyperref}
+
+% --- Encabezado y pie de pagina ----------------------------------------------
+\usepackage{fancyhdr}
+\setlength{\headheight}{33pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{%
+  \begin{picture}(0,0)
+    \put(5,10){\includegraphics[width=11mm]{pictures/escudo.png}}
+  \end{picture}%
+  \hspace{1mm}\textsc{\color{azulTitulo}Control Digital \hspace{90mm} Ing. Telecomunicaciones}%
+}
+\rhead{%
+  \begin{picture}(125,0)
+    \put(10,10){\includegraphics[width=35mm]{pictures/logo.png}}
+  \end{picture}%
+}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\sectionmark}[1]{}
+\renewcommand{\subsectionmark}[1]{}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \lhead{%
+    \begin{picture}(0,0)
+      \put(0,-5){\includegraphics[width=8.5mm]{pictures/escudo.png}}
+    \end{picture}%
+  }
+  \rhead{%
+    \begin{picture}(86,0)
+      \put(0,-10){\includegraphics[width=30mm]{pictures/logo.png}}
+    \end{picture}%
+  }
+  \cfoot{\thepage}
+  \renewcommand{\headrulewidth}{0.6pt}
+}
+
+% --- Formato de secciones ----------------------------------------------------
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\titleformat{\section}
+  {\color{azulTitulo}\large\bfseries}{\thesection.}{0.5em}{}
+  [\color{azulTitulo}\titlerule]
+
+\titleformat{\subsection}
+  {\color{azulTitulo}\normalsize\bfseries}{\thesubsection}{0.5em}{}[]
+
+\titleformat{\subsubsection}
+  {\color{azulTitulo}\normalsize\itshape}{\thesubsubsection}{0.5em}{}[]
+
+% --- Numeracion de secciones -------------------------------------------------
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+
+% --- Codigo fuente -----------------------------------------------------------
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% --- Diagramas TikZ ----------------------------------------------------------
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, shapes.geometric, positioning, fit, backgrounds, babel}
+
+% --- Matematicas -------------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+
+% --- Nombres localizados -----------------------------------------------------
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\tablename}{Tabla}
+
+\section{Ejercicio 1: Ajuste de controladores PID para sistemas SISO (S-IMC)}
+
+Se dise\~nan los controladores PID para los dos procesos planteados en la Tarea no. 3,
+utilizando la misma nomenclatura del ejemplo del m\'etodo S-IMC.
+
+El modelo deseado se define como:
+\[
+G_f(s)=\frac{e^{-\theta s}}{\tau_c s+1},\qquad T_s \approx 4\tau_c+\theta
+\]
+
+Para el caso
+\(G_p(s)=\dfrac{K_c e^{-\theta s}}{(\tau_1 s+1)(\tau_2 s+1)}\), se usa:
+\[
+K_p'=\frac{\tau_1}{K_c(\tau_c+\theta)},\qquad
+T_i'=\min\left[\tau_1,\,4(\tau_c+\theta)\right],\qquad
+T_d'=\tau_2
+\]
+
+Para el caso
+\(G_p(s)=\dfrac{K_c e^{-\theta s}}{(\tau_1 s+1)}\), se usa:
+\[
+K_p'=\frac{1}{K_c(\tau_c+\theta)},\qquad
+T_i'=\min\left[\tau_1,\,4(\tau_c+\theta)\right],\qquad
+T_d'=0
+\]
+
+La conversi\'on de la estructura serie a formato ISA es:
+\[
+K_p = K_p'\left(1+\frac{T_d'}{T_i'}\right),\qquad
+T_i = T_i'\left(1+\frac{T_d'}{T_i'}\right),\qquad
+T_d = \frac{T_d'}{1+T_d'/T_i'}
+\]
+
+\subsection{Proceso 1}
+
+\[
+G_p(s)=\frac{0.4\,e^{-s}}{(5s+1)(2s+1)},\qquad T_s=19\,s
+\]
+
+Datos:
+\[
+K_c=0.4,\quad \theta=1,\quad \tau_1=5,\quad \tau_2=2
+\]
+
+  extbf{Paso 1: C\'alculo de \(\tau_c\)}
+\[
+19=4\tau_c+1 \Rightarrow \tau_c=4.5
+\]
+
+  extbf{Paso 2: Par\'ametros en estructura serie}
+\[
+K_p'=\frac{5}{0.4(4.5+1)}=2.2727
+\]
+\[
+T_i'=\min\left[5,\,4(4.5+1)\right]=\min[5,22]=5
+\]
+\[
+T_d'=2
+\]
+
+Resultado (serie):
+\[
+\boxed{K_p'=2.2727,\quad T_i'=5,\quad T_d'=2}
+\]
+
+\textbf{Paso 3: Conversi\'on a formato ISA}
+\[
+K_p=2.2727\left(1+\frac{2}{5}\right)=3.1818
+\]
+\[
+T_i=5\left(1+\frac{2}{5}\right)=7
+\]
+\[
+T_d=\frac{2}{1+2/5}=1.4286
+\]
+
+Resultado (ISA):
+\[
+\boxed{K_p=3.1818,\quad T_i=7,\quad T_d=1.4286}
+\]
+
+\subsection{Proceso 2}
+
+\[
+G_p(s)=\frac{1.3\,e^{-1.3s}}{(3.2s+1)},\qquad T_s=11\,s
+\]
+
+Datos:
+\[
+K_c=1.3,\quad \theta=1.3,\quad \tau_1=3.2
+\]
+
+\textbf{Paso 1: C\'alculo de \(\tau_c\)}
+\[
+11=4\tau_c+1.3 \Rightarrow \tau_c=2.425
+\]
+
+\textbf{Paso 2: Par\'ametros en estructura serie (PI)}
+\[
+K_p'=\frac{1}{1.3(2.425+1.3)}=\frac{1}{1.3(3.725)}=\frac{1}{4.8425}=0.2065
+\]
+\[
+T_i'=\min\left[3.2,\,4(2.425+1.3)\right]=\min[3.2,14.9]=3.2
+\]
+\[
+T_d'=0
+\]
+
+Resultado (serie):
+\[
+\boxed{K_p'=0.2065,\quad T_i'=3.2,\quad T_d'=0}
+\]
+
+\textbf{Paso 3: Conversi\'on a formato ISA}
+
+Como \(T_d'=0\), los par\'ametros se mantienen:
+\[
+\boxed{K_p=0.2065,\quad T_i=3.2,\quad T_d=0}
+\]
+
+\section{Ejercicio 2: Controlador MIMO para sistema multitanques}
+
+En este ejercicio se aplica la metodolog\'ia de dise\~no MIMO PID solicitada en la Tarea no. 3.
+Se presenta el procedimiento completo y los resultados que deben calcularse a partir del
+modelo del sistema multitanques de laboratorio.
+
+\subsection{1) Modelo linealizado del sistema multitanques}
+
+Se parte del modelo no lineal alrededor de un punto de operaci\'on
+\((\mathbf{x}_0,\mathbf{u}_0,\mathbf{y}_0)\) y se linealiza mediante Jacobianos:
+\[
+\Delta\dot{\mathbf{x}}=A\,\Delta\mathbf{x}+B\,\Delta\mathbf{u},\qquad
+\Delta\mathbf{y}=C\,\Delta\mathbf{x}+D\,\Delta\mathbf{u}
+\]
+
+La matriz de transferencia linealizada queda:
+\[
+G(s)=C(sI-A)^{-1}B+D
+\]
+
+Para un sistema 2\(\times\)2:
+\[
+G(s)=\begin{bmatrix}
+G_{11}(s) & G_{12}(s)\\
+G_{21}(s) & G_{22}(s)
+\end{bmatrix}
+\]
+
+\subsection{2) Matriz de ganancias relativas (RGA)}
+
+La RGA se calcula en estado estacionario con la ganancia est\'atica
+\(K=G(0)\):
+\[
+\Lambda=K\circ\left(K^{-1}\right)^T
+\]
+donde \(\circ\) denota producto elemento a elemento.
+
+Criterio de selecci\'on:
+\begin{itemize}
+  \item Preferir elementos de \(\Lambda\) cercanos a 1.
+  \item Evitar pares con \(\lambda_{ij}<0\) o magnitudes muy grandes.
+\end{itemize}
+
+\subsection{3) Selecci\'on de lazos y criterio de emparejamiento}
+
+Con base en \(\Lambda\), se define el emparejamiento entrada-salida que minimiza
+la interacci\'on entre lazos. Para un caso t\'ipico 2\(\times\)2, el emparejamiento puede ser:
+\[
+y_1 \leftrightarrow u_1,\qquad y_2 \leftrightarrow u_2
+\]
+o, si la RGA lo indica, emparejamiento cruzado.
+
+\subsection{4) Sinton\'ia IMC de cada lazo desacoplado}
+
+Cada lazo principal se aproxima por FOPDT:
+\[
+G_{ii}(s)\approx \frac{K_i e^{-\theta_i s}}{\tau_i s+1}
+\]
+
+Usando IMC (forma PI):
+\[
+K_{p,i}=\frac{\tau_i}{K_i(\lambda_i+\theta_i)},\qquad
+T_{i,i}=\tau_i
+\]
+donde \(\lambda_i\) es el par\'ametro de robustez deseado.
+
+Si se requiere PID, se extiende con la forma utilizada en clase para SOPDT/FOPDT seg\'un el lazo.
+
+\subsection{5) Simulaci\'on en Simulink con modelo no lineal}
+
+Se implementa en Simulink:
+\begin{itemize}
+  \item Modelo no lineal de tanques.
+  \item Dos controladores (uno por lazo) con el emparejamiento seleccionado.
+  \item Pruebas de seguimiento de consigna y rechazo de perturbaciones.
+\end{itemize}
+
+Se reportan indicadores por lazo: tiempo de establecimiento, sobreimpulso,
+error estacionario y esfuerzo de control.
+
+\subsection{6) Estimaci\'on de flujos y arquitectura en cascada}
+
+Se estima el flujo de enlace y/o salida a partir de mediciones de nivel y
+caracter\'isticas hidr\'aulicas del sistema. Luego se plantea cascada:
+\begin{itemize}
+  \item Lazo interno r\'apido: control de flujo.
+  \item Lazo externo lento: control de nivel.
+\end{itemize}
+
+Condici\'on recomendada de dise\~no en cascada:
+\[
+\omega_{c,\text{interno}} \approx 3\text{ a }5\;\omega_{c,\text{externo}}
+\]
+
+\subsection{7) Comparaci\'on de desempe\~no y reporte final}
+
+Se compara el desempe\~no entre:
+\begin{itemize}
+  \item Control MIMO PID simple (sin cascada).
+  \item Control con arquitectura en cascada.
+\end{itemize}
+
+La comparaci\'on se realiza para cambios de consigna y perturbaciones,
+reportando m\'etricas de desempe\~no y an\'alisis de interacci\'on entre lazos.
+\end{document}
